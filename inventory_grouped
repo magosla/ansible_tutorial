@@ -1,0 +1,9 @@
+[web_servers]
+server1 ansible_host=172.18.152.85 ansible_port=2201
+fedora ansible_host=172.18.152.85 ansible_port=2204
+ 
+[db_servers]
+server2 ansible_host=172.18.152.85 ansible_port=2202
+
+[file_servers]
+server3 ansible_host=172.18.152.85 ansible_port=2203
