@@ -1,0 +1,9 @@
+- name: restart_apache
+  tags: apache
+  service:
+   name: "{{ apache_service }}"
+   state: restarted
+
+- name: show_db_result
+  debug:
+   msg: "{{ db_result.stdout }} Running handler."

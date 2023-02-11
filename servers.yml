@@ -2,19 +2,11 @@
 - hosts: all
   become: true
   pre_tasks:
-    - name: update repository index (Fedora)
+    - name: update repo index
       tags: always
-      dnf:
+      package:
         update_cache: yes
       changed_when: false
-      when: ansible_distribution == "Fedora"
-
-    - name: update repository index (Ubuntu)
-      tags: always
-      apt:
-        update_cache: yes
-      changed_when: false
-      when: ansible_distribution == "Ubuntu"
 
 - hosts: all
   become: true
@@ -28,11 +20,15 @@
 
 - hosts: web_servers
   become: true
+  handlers:
+    - import_tasks: handlers/main.yml
   roles:
     - web_servers
 
 - hosts: db_servers
   become: true
+  handlers:
+    - import_tasks: handlers/main.yml
   gather_facts: true
   vars:
     mysql_root_password: "Password1"

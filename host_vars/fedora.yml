@@ -1,0 +1,12 @@
+ansible_port: 2204
+apache_service: httpd
+apache_package_name: httpd
+php_package_name: php
+apache_port_file: /etc/httpd/conf/httpd.conf
+apache_config_file: /etc/httpd/conf/httpd.conf
+apache_listen_port: 8084
+db_server_package: mariadb-server
+db_python_package: python3-PyMySQL
+db_root_password: Password1
+db_service: mariadb
+db_port: 3304

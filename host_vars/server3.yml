@@ -1,0 +1,12 @@
+ansible_port: 2203
+apache_service: apache2
+apache_package_name: apache2
+php_package_name: libapache2-mod-php
+apache_port_file: /etc/apache2/ports.conf
+apache_config_file: /etc/apache2/apache2.conf
+apache_listen_port: 8083
+db_server_package: mariadb-server
+db_python_package: python3-pymysql
+db_root_password: Password1
+db_service: mariadb
+db_port: 3303
