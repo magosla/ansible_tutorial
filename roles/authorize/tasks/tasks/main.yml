@@ -1,0 +1,19 @@
+- name: Set authorized key for simone
+  ansible.posix.authorized_key:
+    user: simone
+    state: present
+    key: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
+
+# - name: Set authorized key for simone
+#   ansible.posix.authorized_key:
+#     user: simone
+#     state: present
+#     key: https://github.com/charlie.keys
+  
+- name: add sudoers file for simone
+  copy:
+    src: sudoer_simone
+    dest: /etc/sudoers.d/simone
+    owner: root
+    group: root
+    mode: 0440

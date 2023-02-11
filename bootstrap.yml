@@ -27,6 +27,7 @@
     user:
       name: simone
       groups: root
+    
 
   # - name: Set authorized key for simone
   #   authorized_key:
