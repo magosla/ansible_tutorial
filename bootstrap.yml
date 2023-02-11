@@ -28,10 +28,22 @@
       name: simone
       groups: root
 
-  - name: add ssh key for simone
-    authorized_key:
+  # - name: Set authorized key for simone
+  #   authorized_key:
+  #     user: simone
+  #     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6vEH009GGAaF0Dwe1mZvo1EqssB4bB/9GC8s2qUBk2 ansible"
+
+  - name: Set authorized key for simone
+    ansible.posix.authorized_key:
       user: simone
-      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6vEH009GGAaF0Dwe1mZvo1EqssB4bB/9GC8s2qUBk2 ansible"
+      state: present
+      key: "{{ lookup('file', '~/.ssh/ansible.pub') }}"
+
+  # - name: Set authorized key for simone
+  #   ansible.posix.authorized_key:
+  #     user: simone
+  #     state: present
+  #     key: https://github.com/charlie.keys
     
   - name: add sudoers file for simone
     copy:
