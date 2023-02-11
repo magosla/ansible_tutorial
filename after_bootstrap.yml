@@ -1,0 +1,164 @@
+---
+ 
+- hosts: all
+  become: true
+  pre_tasks:
+    
+  - name: update repository index (Fedora)
+    tags: always
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Fedora"
+    
+  - name: update repository index (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for simone
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6vEH009GGAaF0Dwe1mZvo1EqssB4bB/9GC8s2qUBk2 ansible"
+ 
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.3.8/terraform_1.3.8_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache and php (Ubuntu)
+    tags: apache,apache2,ubuntu
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: change apache port (Ubuntu)
+    tags: apache,apache2,ubuntu
+    lineinfile:
+      path: /etc/apache2/ports.conf
+      regexp: '^Listen 80$'
+      line: Listen 8082
+    when: ansible_distribution == "Ubuntu"
+    register: apache2
+ 
+  - name: restart apache (Ubuntu)
+    tags: apache,apache2,ubuntu
+    service:
+      name: apache2
+      state: restarted
+    when: apache2.changed
+ 
+  - name: install apache and php (Fedora)
+    tags: apache,fedora,httpd
+    dnf:
+      name:
+       - httpd
+       - php
+      state: latest
+    when: ansible_distribution == "Fedora"
+ 
+  - name: change httpd port (Fedora)
+    tags: apache,fedora,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^Listen 80$'
+      line: Listen 8083
+    when: ansible_distribution == "Fedora"
+    register: httpd
+ 
+  - name: start and enable httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Fedora"
+ 
+  - name: restart httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+    
+  - name: change e-mail address for admin
+    tags: apache,fedora,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "Fedora"
+    register: httpd
+ 
+  - name: restart httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+     name: httpd
+     state: restarted
+    when: httpd.changed 
+ 
+  - name: copy html file for site
+    tags: apache,apache,apache2,httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: db_servers
+  become: true
+  tasks:
+   
+  - name: install mariadb package (Fedora)
+    tags: fedora,db,mariadb
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Fedora"
+   
+  - name: install mariadb package (Ubuntu)
+    tags: ubuntu,db,mariadb
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: file_servers
+  become: true
+  tasks:
+   
+  - name: install samba package
+    tags: samba
+    package:
+      name: samba
+      state: latest
+
+#  ansible-playbook after_bootstrap.yml
+## This playbook would login with the simone user added in ansible.cfg
