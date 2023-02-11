@@ -7,3 +7,6 @@ server2 ansible_host=172.18.152.85 ansible_port=2202
 
 [file_servers]
 server3 ansible_host=172.18.152.85 ansible_port=2203
+
+[workstations]
+workstation ansible_host=172.18.152.85
