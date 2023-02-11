@@ -1,5 +1,5 @@
 [web]
-server1 ansible_host=172.18.152.85 ansible_port=2201
-server2 ansible_host=172.18.152.85 ansible_port=2202
-server3 ansible_host=172.18.152.85 ansible_port=2203
-fedora ansible_host=172.18.152.85 ansible_port=2204
+server1 ansible_host=172.18.152.85 ansible_port=2201 apache_package=apache2 php_package=libapache2-mod-php
+server2 ansible_host=172.18.152.85 ansible_port=2202 apache_package=apache2 php_package=libapache2-mod-php
+server3 ansible_host=172.18.152.85 ansible_port=2203 apache_package=apache2 php_package=libapache2-mod-php
+fedora ansible_host=172.18.152.85 ansible_port=2204 apache_package=httpd php_package=php
