@@ -47,6 +47,22 @@
         - libapache2-mod-php
       state: latest
     when: ansible_distribution == "Ubuntu"
+
+  - name: change apache port (Ubuntu)
+    tags: apache,apache2,ubuntu
+    lineinfile:
+      path: /etc/apache2/ports.conf
+      regexp: '^Listen 80$'
+      line: Listen 8082
+    when: ansible_distribution == "Ubuntu"
+    register: apache2
+ 
+  - name: restart apache (Ubuntu)
+    tags: apache,apache2,ubuntu
+    service:
+      name: apache2
+      state: restarted
+    when: apache2.changed
  
   - name: install apache and php (Fedora)
     tags: apache,fedora,httpd
@@ -56,6 +72,46 @@
        - php
       state: latest
     when: ansible_distribution == "Fedora"
+ 
+  - name: change httpd port (Fedora)
+    tags: apache,fedora,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^Listen 80$'
+      line: Listen 8083
+    when: ansible_distribution == "Fedora"
+    register: httpd
+ 
+  - name: start and enable httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Fedora"
+ 
+  - name: restart httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+    
+  - name: change e-mail address for admin
+    tags: apache,fedora,httpd
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "Fedora"
+    register: httpd
+ 
+  - name: restart httpd (Fedora)
+    tags: apache,fedora,httpd
+    service:
+     name: httpd
+     state: restarted
+    when: httpd.changed 
  
   - name: copy html file for site
     tags: apache,apache,apache2,httpd
