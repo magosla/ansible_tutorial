@@ -1,0 +1,4 @@
+ansible_port: 22
+ssh_port: 22
+ssh_users: "mag simone"
+ssh_template_file: sshd_config_ubuntu.j2

@@ -1,4 +1,5 @@
 ansible_port: 2201
+ssh_port: 2201
 apache_service: apache2
 apache_package_name: apache2
 php_package_name: libapache2-mod-php
@@ -10,3 +11,5 @@ db_python_package: python3-pymysql
 db_root_password: Password1
 db_service: mariadb
 db_port: 3301
+ssh_users: "mag simone"
+ssh_template_file: sshd_config_ubuntu.j2
